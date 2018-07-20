@@ -63,10 +63,10 @@ module.exports = (addr) => {
     if(isNil(username) || isNil(domainName)) return false;
     if(isEmpty(username.trim()) || isEmpty(domainName.trim())) return false;
 
-    // Construct the checks.
-    const syntaxCheckName = "performing the syntax check";
-    const syntaxCheck = runCheck( syntaxCheckName, looksLikeEmail );
+    // Now check that it's sane.
+    if(!(looksLikeEmail(addr))) return false;
 
+    // Construct the checks.
     const mxRecordCheckName = "performing the MX record DNS check";
     const mxRecordCheck = runCheck(
       mxRecordCheckName,
@@ -100,7 +100,6 @@ module.exports = (addr) => {
     );
 
     const compilingName = "compiling results";
-    return runCheck(compilingName, () => Promise.filter([syntaxCheck,mxRecordCheck,burnerCheck], (it) => !it).then((failures) => isNil(failures) || isEmpty(failures)));
-
+    return runCheck(compilingName, () => Promise.filter([mxRecordCheck,burnerCheck], (it) => !it).then((failures) => isNil(failures) || isEmpty(failures)));
   });
 };

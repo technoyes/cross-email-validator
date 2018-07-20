@@ -23,7 +23,7 @@ await validateEmail("developer+rnev@health"); // returns false
 
 ## Step 1: Syntax
 
-* It first ensures that the value is a non-empty string, that the character '`@`' is somewhere in that string, and that it is not the first or last character.
+* It first ensures that the value is a non-empty string, that the character '`@`' is in the address precisely once, and that '`@`' is not the first or last character.
 * Then uses [validator/lib/isEmail](https://www.npmjs.com/package/validator) for validating the e-mail address format. This does an extensive amount of checks, with a whole suite of checks specifically for `@gmail.com` addresses.
 
 ## Step 2: Network Checks

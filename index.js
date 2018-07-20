@@ -28,7 +28,7 @@ const doFetch = (uri, customOptions={}) => Promise.try(() => fetch(uri, merge({
 
 module.exports = (addr) => {
   const onError = (msg) => (error) => {
-    console.warn(`Error while ${msg}; returning true by default`, e.message || e.toString(), { addr, error }, error);
+    console.warn(`Error while ${msg}; returning true by default`, error.message || error.toString(), { addr, error }, error);
     return true;
   };
   const logResults = (msg) => (result) => console.debug(

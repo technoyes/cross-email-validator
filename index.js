@@ -13,22 +13,24 @@ const getDnsOverHttpUri = (
   'do': true,
   'cd': false,
 }));
-const getBurnerCheckUri = (
-  (baseUri) => (domainName) => baseUri.clone().filename(domainName).toString()
-)(new URI("https://open.kickbox.com/v1/disposable/beewell.health"));
+const getBurnerCheckUri = (domainName) =>
+  new URI("https://open.kickbox.com/v1/disposable/beewell.health").filename(domainName).toString()
 
 const doFetch = (uri, customOptions={}) => Promise.try(() => fetch(uri, merge({
   credentials: 'omit',
-  mode: 'no-cors',
+  mode: 'cors',
   method: 'GET',
 }, customOptions)).tap((response) => {
-  if(!response.ok) throw new Error("Network error");
+  if(!response.ok) {
+    console.warn("Could not perform fetch: response was not ok", { response, uri, customOptions });
+    throw new Error(`Network error while fetching: ${uri}`);
+  }
 }).get("body").call("json"));
 
 
 module.exports = (addr) => {
   const onError = (msg) => (error) => {
-    console.warn(`Error while ${msg}; returning true by default`, error.message || error.toString(), { addr, error }, error);
+    console.warn(`Error while ${msg}; returning true by default: ${error.message || error}`, { addr, error }, error);
     return true;
   };
   const logResults = (msg) => (result) => console.debug(
@@ -36,7 +38,7 @@ module.exports = (addr) => {
     { addr, result }
   );
 
-  const timeLimitMs = 5000;
+  const timeLimitMs = 1000;
 
   const runCheck = (msg, func) => Promise.try(() => func(addr)).timeout(timeLimitMs).catch(onError(msg)).tap(logResults(msg));
 

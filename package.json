@@ -1,0 +1,28 @@
+{
+  "name": "react-native-email-validator",
+  "version": "1.0.0",
+  "description": "Goes beyond validating the characters that make up the email, and additionally performs DNS and mailbox checks to ensure that the email address is valid.",
+  "main": "index.js",
+  "repository": "git@github.com:BeeWell/react-native-email-deep-validator.git",
+  "author": "Robert Fischer <robert+github@getbeewell.com>",
+  "license": "MIT",
+  "private": false,
+  "sideEffects": false,
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "lodash": "^4.17.10",
+    "urijs": "^1.19.1",
+    "validator": "^10.4.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.1.0",
+    "eslint-plugin-dependencies": "^2.4.0",
+    "eslint-plugin-lodash": "^2.7.0",
+    "eslint-plugin-react": "^7.10.0",
+    "eslint-plugin-react-filenames": "^0.0.2",
+    "eslint-plugin-react-native": "^3.2.1"
+  },
+  "scripts": {
+    "eslint": "eslint --cache --fix ./index.js 2>&1 1>/dev/null || eslint --cache --color --report-unused-disable-directives ./index.js"
+  }
+}

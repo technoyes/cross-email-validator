@@ -7,14 +7,14 @@ const URI = require("urijs");
 
 const atSymbol = "@";
 const getDnsOverHttpUri = (
-  (baseUri) => (domainName) => baseUri.clone().setQuery({name: domainName})
+  (baseUri) => (domainName) => baseUri.clone().setQuery({name: domainName}).toString()
 )(new URI("https://cloudflare-dns.com/dns-query").setQuery({
   'type': 'MX',
   'do': true,
   'cd': false,
 }));
 const getBurnerCheckUri = (
-  (baseUri) => (domainName) => baseUri.clone().filename(domainName)
+  (baseUri) => (domainName) => baseUri.clone().filename(domainName).toString()
 )(new URI("https://open.kickbox.com/v1/disposable/beewell.health"));
 
 const doFetch = (uri, customOptions={}) => Promise.try(() => fetch(uri, merge({
@@ -28,7 +28,7 @@ const doFetch = (uri, customOptions={}) => Promise.try(() => fetch(uri, merge({
 
 module.exports = (addr) => {
   const onError = (msg) => (error) => {
-    console.warn(`Error while ${msg}; returning true by default`, { addr, error});
+    console.warn(`Error while ${msg}; returning true by default`, e.message || e.toString(), { addr, error }, error);
     return true;
   };
   const logResults = (msg) => (result) => console.debug(

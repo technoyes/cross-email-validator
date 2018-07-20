@@ -1,11 +1,15 @@
-# react-native-email-deep-validator
-Goes beyond validating the characters that make up the email, and instead performs checks on the network to ensure that the e-mail address is valid.
+# cross-email-validator
+Goes beyond validating the characters that make up the email, and additionally performs DNS and mailbox checks to ensure that the email address is valid. Does all the network calls using [`cross-fetch`](https://github.com/lquixada/cross-fetch), so it works in the browser, on React Native, on Node, and anywhere else you want to run it.
 
 # Synposis
+
+## Install
 
 ```bash
 yarn add react-native-email-validator
 ```
+
+## Execute
 
 ```javascript
 import validateEmail from "react-native-email-validator"
@@ -20,7 +24,7 @@ await validateEmail("developer+rnev@health"); // returns false
 ## Step 1: Syntax
 
 * It first ensures that the value is a non-empty string, that the character '`@`' is somewhere in that string, and that it is not the first or last character.
-* Then uses [validator/lib/isEmail](https://www.npmjs.com/package/validator) for validating the e-mail address format, which amounts to firing a big ugly regexp against it.
+* Then uses [validator/lib/isEmail](https://www.npmjs.com/package/validator) for validating the e-mail address format. This does an extensive amount of checks, with a whole suite of checks specifically for `@gmail.com` addresses.
 
 ## Step 2: Network Checks
 

@@ -1,9 +1,8 @@
-
-
-const { isNil, isEmpty, isString, merge, not } = require("lodash");
+const { isNil, isEmpty, isString, merge } = require("lodash");
 const looksLikeEmail = require("validator/lib/isEmail");
 const Promise = require("bluebird");
 const URI = require("urijs");
+const fetch = require("cross-fetch");
 
 const atSymbol = "@";
 const getDnsOverHttpUri = (
@@ -16,16 +15,18 @@ const getDnsOverHttpUri = (
 const getBurnerCheckUri = (domainName) =>
   new URI("https://open.kickbox.com/v1/disposable/beewell.health").filename(domainName).toString()
 
-const doFetch = (uri, customOptions={}) => Promise.try(() => fetch(uri, merge({
-  credentials: 'omit',
-  mode: 'cors',
-  method: 'GET',
-}, customOptions)).tap((response) => {
+const doFetch = (uri, customOptions={}) => Promise.try(() =>
+  fetch(uri, merge({
+    credentials: 'omit',
+    mode: 'cors',
+    method: 'GET',
+  }, customOptions))
+).tap((response) => {
   if(!response.ok) {
     console.warn("Could not perform fetch: response was not ok", { response, uri, customOptions });
     throw new Error(`Network error while fetching: ${uri}`);
   }
-}).get("body").call("json"));
+}).call("json");
 
 
 module.exports = (addr) => {
@@ -40,7 +41,9 @@ module.exports = (addr) => {
 
   const timeLimitMs = 1000;
 
-  const runCheck = (msg, func) => Promise.try(() => func(addr)).timeout(timeLimitMs).catch(onError(msg)).tap(logResults(msg));
+  const runCheck = (msg, func) => Promise.try(() => func(addr)).timeout(timeLimitMs).tap(
+    result => console.debug(`Successfully completed ${msg}. Result: ${result}`)
+  ).catch(onError(msg)).tap(logResults(msg));
 
   const validatingName = "validating email address";
   return runCheck(validatingName, () => {
@@ -97,7 +100,7 @@ module.exports = (addr) => {
     );
 
     const compilingName = "compiling results";
-    return runCheck(compilingName, () => Promise.filter([syntaxCheck,mxRecordCheck,burnerCheck], not).then((failures) => isNil(failures) || isEmpty(failures)));
+    return runCheck(compilingName, () => Promise.filter([syntaxCheck,mxRecordCheck,burnerCheck], (it) => !it).then((failures) => isNil(failures) || isEmpty(failures)));
 
   });
 };

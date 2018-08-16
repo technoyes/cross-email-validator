@@ -1,10 +1,13 @@
 {
     "env": {
         "es6": true,
-        "node": true,
-        "browser": true
+        "node": true
     },
-    "extends": [ "eslint:recommended", "plugin:react/recommended", "plugin:react-native/all", "plugin:lodash/recommended" ],
+    "extends":
+        [ "eslint:recommended"
+        , "plugin:lodash/recommended"
+        ],
+    "parser": "babel-eslint",
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
@@ -13,11 +16,10 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react",
-        "react-native",
-        "react-filenames",
         "lodash",
-        "dependencies"
+        "dependencies",
+        "node", "promise",
+        "prettier"
     ],
     "rules": {
         "indent": [ "error", 2 ],
@@ -49,7 +51,7 @@
         "no-iterator": [ "error" ],
         "no-lone-blocks": [ "warn" ],
         "no-loop-func": [ "error" ],
-        "no-magic-numbers": [ "error", { "ignore": [0,1] } ],
+        "no-magic-numbers": [ "warn", { "ignore": [0,1,2,0.1,0.25,0.5] } ],
         "no-new-func": [ "error" ],
         "no-new-wrappers": [ "error" ],
         "no-proto": [ "error" ],
@@ -70,7 +72,7 @@
         "no-shadow": [ "error" ],
         "no-shadow-restricted-names": [ "error" ],
         "no-undef-init": [ "error" ],
-        "no-use-before-define": [ "error" ],
+        "no-use-before-define": [ "warn" ],
         "no-bitwise": [ "error" ],
         "no-var": [ "error" ],
         "prefer-arrow-callback": [ "warn" ],
@@ -80,10 +82,10 @@
             {"array": false},
             {"enforceForRenamedProperties": false}
         ],
-        "prefer-rest-params": [ "warn" ],
-        "prefer-spread": [ "warn" ],
+        "prefer-rest-params": [ "error" ],
+        "prefer-spread": [ "error" ],
         "prefer-template": [ "warn" ],
-        "yield-star-spacing": [ "error", "after" ],
+        "yield-star-spacing": [ "warn", "after" ],
         "callback-return": [ "error" ],
         "handle-callback-err": [ "error" ],
         "no-buffer-constructor": [ "error" ],
@@ -99,7 +101,7 @@
               "functions": "never"
             }
         ],
-        "function-paren-newline": [ "warn" ],
+        "function-paren-newline": [ "warn", "consistent" ],
         "implicit-arrow-linebreak": [ "error", "beside" ],
         "no-mixed-operators": [ "error" ],
         "no-trailing-spaces": [ "warn", { "ignoreComments": true } ],
@@ -107,24 +109,37 @@
         "prefer-object-spread": [ "error" ],
         "arrow-body-style": [ "error", "as-needed" ],
         "arrow-parens": [ "error" ],
-        "generator-star-spacing": [ "error", "after" ],
+        "generator-star-spacing": [ "warn", "after" ],
         "no-confusing-arrow": [ "error" ],
-        "no-duplicate-imports": [ "error", { "includeExports": true } ],
+        "no-duplicate-imports": [ "error", { "includeExports": false } ],
         "no-useless-computed-key": [ "warn" ],
-        "no-useless-rename": [ "error" ],
+        "no-useless-rename": [ "warn" ],
         "no-await-in-loop": [ "error" ],
         "no-console": [ "error", { "allow": ["debug","warn","error"] } ],
+        "lodash/chaining": [ "off" ],
+        "lodash/chain-style": [ "off" ],
         "lodash/import-scope": [ "off" ],
         "lodash/prefer-lodash-method": [ "off" ],
         "lodash/prop-shorthand": [ "warn" ],
         "lodash/path-style": [ "warn" ],
         "template-tag-spacing": [ "warn" ],
-        "react-native/no-inline-styles": [ "warn" ],
-        "react/prop-types": [ "warn" ],
         "dependencies/case-sensitive": [ "error" ],
         "dependencies/no-cycles": [ "warn" ],
-        "dependencies/no-unresolved": [ "off" ],
+        "dependencies/no-unresolved": [ "error" ],
         "dependencies/require-json-ext": [ "warn" ],
-        "react-filenames/filename-matches-component": [ "off" ]
+        "node/no-extraneous-import": [ "off" ],
+        "node/no-missing-import": [ "error" ],
+        "node/exports-style": [ "warn", "exports" ],
+        "node/prefer-global/buffer": ["warn", "never"],
+        "node/prefer-global/console": ["warn", "always"],
+        "node/prefer-global/process": ["warn", "never"],
+        "node/prefer-global/url": ["warn", "never"],
+        "promise/catch-or-return": ["error"],
+        "promise/no-return-wrap": ["warn"],
+        "promise/param-names": ["warn"],
+        "promise/no-native": ["error"],
+        "promise/no-return-in-finally": ["error"],
+        "promise/valid-params": ["error"],
+        "require-yield": ["error"]
     }
 }

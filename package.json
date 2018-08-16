@@ -12,6 +12,7 @@
     "bluebird": "^3.5.1",
     "cross-fetch": "^2.2.2",
     "lodash": "^4.17.10",
+    "tlds": "stephenmathieson/node-tlds#master",
     "urijs": "^1.19.1",
     "validator": "^10.4.0"
   },

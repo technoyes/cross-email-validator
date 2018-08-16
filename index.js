@@ -2,7 +2,8 @@ const { isNil, isEmpty, isString, merge } = require("lodash");
 const looksLikeEmail = require("validator/lib/isEmail");
 const Promise = require("bluebird");
 const URI = require("urijs");
-const fetch = require("cross-fetch");
+require("cross-fetch/polyfill"); // Lets us test the file in Node
+const tlds = require("tlds");
 
 const atSymbol = "@";
 const getDnsOverHttpUri = (
@@ -43,7 +44,7 @@ module.exports = (addr) => {
 
   const runCheck = (msg, func) => Promise.try(() => func(addr)).timeout(timeLimitMs).tap(
     result => console.debug(`Successfully completed ${msg}. Result: ${result}`)
-  ).catch(onError(msg)).tap(logResults(msg));
+  ).tapCatch(onError(msg)).tap(logResults(msg));
 
   const validatingName = "validating email address";
   return runCheck(validatingName, () => {
@@ -63,8 +64,8 @@ module.exports = (addr) => {
     if(isNil(username) || isNil(domainName)) return false;
     if(isEmpty(username.trim()) || isEmpty(domainName.trim())) return false;
 
-    // Now check that it's sane.
-    if(!(looksLikeEmail(addr))) return false;
+    // Now check that it's sane: valid TLD and looks like an e-mail as per Validator
+    if(!(tlds.includes(domainName) && looksLikeEmail(addr))) return false;
 
     // Construct the checks.
     const mxRecordCheckName = "performing the MX record DNS check";

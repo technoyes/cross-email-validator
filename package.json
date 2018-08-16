@@ -1,6 +1,6 @@
 {
   "name": "cross-email-validator",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Goes beyond validating the characters that make up the email, and additionally performs DNS and mailbox checks to ensure that the email address is valid. Does all the network calls using 'cross-fetch', so it works in the browser, on React Native, on Node, and anywhere else you want to execute it.",
   "main": "index.js",
   "repository": "git@github.com:BeeWell/react-native-email-validator.git",

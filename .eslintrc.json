@@ -7,7 +7,6 @@
         [ "eslint:recommended"
         , "plugin:lodash/recommended"
         ],
-    "parser": "babel-eslint",
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
@@ -129,7 +128,7 @@
         "dependencies/require-json-ext": [ "warn" ],
         "node/no-extraneous-import": [ "off" ],
         "node/no-missing-import": [ "error" ],
-        "node/exports-style": [ "warn", "exports" ],
+        "node/exports-style": [ "warn", "module.exports" ],
         "node/prefer-global/buffer": ["warn", "never"],
         "node/prefer-global/console": ["warn", "always"],
         "node/prefer-global/process": ["warn", "never"],

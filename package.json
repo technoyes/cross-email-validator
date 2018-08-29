@@ -22,9 +22,11 @@
     "eslint-plugin-lodash": "^2.7.0",
     "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-prettier": "^2.6.2",
-    "eslint-plugin-promise": "^3.8.0"
+    "eslint-plugin-promise": "^3.8.0",
+    "husky": "^0.14.3"
   },
   "scripts": {
-    "eslint": "eslint --cache --fix ./index.js 2>&1 1>/dev/null || eslint --cache --color --report-unused-disable-directives ./index.js"
+    "eslint": "eslint --cache --fix ./index.js 2>&1 1>/dev/null || eslint --cache --color --report-unused-disable-directives ./index.js",
+    "precommit": "yarn run eslint"
   }
 }

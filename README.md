@@ -39,11 +39,18 @@ await validateEmail("developer+rnev@health"); // returns false
 
 Note that any network check that errors out will be counted as a pass. So if there is no internet, the internet connection is slow, or the server is down, then it is equivalent to the network check returning valid.
 
-# Distribution File
+# Browser-Friendly Version of the File
 
 If you're looking for a [Flow](https://flow.org/en/docs/)-free, minified version of the script (say, to include in a webpage), then look
-no further than `./dist/index.js`. It is produced using [Parcel](https://parceljs.org/) and automatically updated before every commit.
+no further than `./dist/browser/index.js`. It is produced using [Parcel](https://parceljs.org/) and automatically updated before every commit.
 The browser support is specified in `./.browserslist.rc` -- for more information, see [browserslist on GitHub](https://github.com/browserslist/browserslist).
+
+When you load that file, the global variable `CrossEmail` will be provided which links to this module.
+
+# Node-Friendly Version of the File
+
+Currently, the `./index.js` file _is_ Node-friendly, but that may not always remain the case. We have the folders `./dist/browser/` and `./dist/node/` for the distinct builds. For the moment, `./dist/node/index.js` currently just symlinks back to `./index.js`, but don't depend
+on that.
 
 # License
 

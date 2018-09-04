@@ -6,13 +6,13 @@ Goes beyond validating the characters that make up the email, and additionally p
 ## Install
 
 ```bash
-yarn add react-native-email-validator
+yarn add cross-email-validator
 ```
 
 ## Execute
 
 ```javascript
-import validateEmail from "react-native-email-validator"
+import validateEmail from "cross-email-validator"
 
 await validateEmail("developer+rnev@beewell.health"); // returns true
 await validateEmail("@beewell.health"); // returns false
@@ -38,6 +38,12 @@ await validateEmail("developer+rnev@health"); // returns false
 * It'd be nice to do an SMTP check, but it's unclear how to do that from within React Native without unlinking.
 
 Note that any network check that errors out will be counted as a pass. So if there is no internet, the internet connection is slow, or the server is down, then it is equivalent to the network check returning valid.
+
+# Distribution File
+
+If you're looking for a [Flow](https://flow.org/en/docs/)-free, minified version of the script (say, to include in a webpage), then look
+no further than `./dist/index.js`. It is produced using [Parcel](https://parceljs.org/) and automatically updated before every commit.
+The browser support is specified in `./.browserslist.rc` -- for more information, see [browserslist on GitHub](https://github.com/browserslist/browserslist).
 
 # License
 

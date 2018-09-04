@@ -20,27 +20,22 @@
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
     "babel-eslint": "^9.0.0",
-    "@babel/preset-flow": "^7.0.0",
     "babel-preset-minify": "^0.4.3",
     "eslint": "^5.1.0",
     "eslint-plugin-babel": "^5.1.0",
     "eslint-plugin-dependencies": "^2.4.0",
-    "eslint-plugin-flowtype": "^2.50.0",
     "eslint-plugin-lodash": "^2.7.0",
     "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-prettier": "^2.6.2",
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-react": "^7.11.1",
-    "flow-bin": "^0.80.0",
-    "flow-typed": "^2.5.1",
-    "husky": "^0.14.3"
+    "husky": "^0.14.3",
+    "parcel": "^1.9.7"
   },
   "scripts": {
     "eslint": "eslint --cache --fix ./index.js 2>&1 1>/dev/null || eslint --cache --color --report-unused-disable-directives ./index.js",
-    "update-flow-typed": "flow-typed install --overwrite",
-    "flow": "flow --strip-root --color always --include-warnings",
-    "babel": "babel ./index.js > dist.js && git add dist.js",
-    "precommit": "yarn run flow && yarn run eslint && yarn run babel",
-    "postinstall": "yarn run update-flow-typed"
+    "babel": "babel ./index.js",
+    "parcel": "parcel build ./index.js && git add ./dist",
+    "precommit": "yarn run eslint && yarn run parcel"
   }
 }

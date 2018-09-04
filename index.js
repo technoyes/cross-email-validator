@@ -1,4 +1,3 @@
-//@flow
 /*global fetch*/
 
 const {isUndefined, isNil, isEmpty, isString, merge} = require("lodash");
@@ -34,18 +33,18 @@ const doFetch = (uri, customOptions={}) => Promise.try(() => fetch(uri, merge({
 }).call("json");
 
 
-module.exports = (addr:string) => {
-  const onError = (msg:string) => (error:Error) => {
+module.exports = (addr) => {
+  const onError = (msg) => (error) => {
     console.warn(`Error while ${msg}; returning true by default: ${error.message}`, {addr, error}, error);
     return true;
   };
-  const logResults = (msg:string) => (result:mixed) => console.debug(
+  const logResults = (msg) => (result) => console.debug(
     `Results of ${msg}`, {addr, result}
   );
 
   const timeLimitMs = 1000;
 
-  const runCheck = (msg:string, func:string=>Promise<boolean>|boolean) => Promise.try(() => func(addr)).timeout(timeLimitMs).tap(
+  const runCheck = (msg, func) => Promise.try(() => func(addr)).timeout(timeLimitMs).tap(
     (result) => console.debug(`Successfully completed ${msg}.`, result)
   ).catch(onError(msg)).tap(logResults(msg));
 

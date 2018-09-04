@@ -61,3 +61,5 @@ typings/
 .next
 
 flow-typed
+
+.cache

@@ -1,7 +1,7 @@
 //@flow
 /*global fetch*/
 
-const { isUndefined, isNil, isEmpty, isString, merge } = require("lodash");
+const {isUndefined, isNil, isEmpty, isString, merge} = require("lodash");
 const looksLikeEmail = require("validator/lib/isEmail");
 const Promise = require("bluebird");
 const URI = require("urijs");
@@ -16,19 +16,19 @@ const atSymbol = "@";
 const getDnsOverHttpUri = (
   (baseUri) => (domainName) => baseUri.clone().setQuery({name: domainName}).toString()
 )(new URI("https://cloudflare-dns.com/dns-query").setQuery({
-  'type': 'MX',
-  'do': true,
-  'cd': false,
+  "type": "MX",
+  "do": true,
+  "cd": false,
 }));
 const getBurnerCheckUri = (domainName) => new URI("https://open.kickbox.com/v1/disposable/beewell.health").filename(domainName).toString();
 
 const doFetch = (uri, customOptions={}) => Promise.try(() => fetch(uri, merge({
-  credentials: 'omit',
-  mode: 'cors',
-  method: 'GET',
+  credentials: "omit",
+  mode: "cors",
+  method: "GET",
 }, customOptions))).tap((response) => {
   if(!response.ok) {
-    console.warn("Could not perform fetch: response was not ok", { response, uri, customOptions });
+    console.warn("Could not perform fetch: response was not ok", {response, uri, customOptions});
     throw new Error(`Network error while fetching: ${uri}`);
   }
 }).call("json");
@@ -36,11 +36,11 @@ const doFetch = (uri, customOptions={}) => Promise.try(() => fetch(uri, merge({
 
 module.exports = (addr:string) => {
   const onError = (msg:string) => (error:Error) => {
-    console.warn(`Error while ${msg}; returning true by default: ${error.message}`, { addr, error }, error);
+    console.warn(`Error while ${msg}; returning true by default: ${error.message}`, {addr, error}, error);
     return true;
   };
   const logResults = (msg:string) => (result:mixed) => console.debug(
-    `Results of ${msg}`, { addr, result }
+    `Results of ${msg}`, {addr, result}
   );
 
   const timeLimitMs = 1000;
@@ -77,12 +77,12 @@ module.exports = (addr:string) => {
       mxRecordCheckName,
       () => doFetch(
         getDnsOverHttpUri(domainName),
-        { headers: { accept: 'application/dns-json' } }
+        {headers: {accept: "application/dns-json"}}
       ).tap((result) => {
         if(result.Status !== 0) {
           throw new Error(`Bad status code from DNS query: ${result.Status}`);
         }
-      }).then(it => it.Answer).then((answer) => {
+      }).then((it) => it.Answer).then((answer) => {
         if(isNil(answer)) {
           throw new Error(`No answer returned: ${answer}`);
         }
@@ -96,7 +96,7 @@ module.exports = (addr:string) => {
     const burnerName = "performing burner e-mail check";
     const burnerCheck = runCheck(
       burnerName,
-      () => doFetch(getBurnerCheckUri(domainName)).then(it => Boolean(it.disposable)).then((result) => {
+      () => doFetch(getBurnerCheckUri(domainName)).then((it) => Boolean(it.disposable)).then((result) => {
         if(isNil(result)) {
           throw new Error(`No result returned: ${result}`);
         }

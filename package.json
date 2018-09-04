@@ -39,7 +39,7 @@
     "eslint": "eslint --cache --fix ./index.js 2>&1 1>/dev/null || eslint --cache --color --report-unused-disable-directives ./index.js",
     "update-flow-typed": "flow-typed install --overwrite",
     "flow": "flow --strip-root --color always --include-warnings",
-    "babel": "babel ./index.js > dist.js",
+    "babel": "babel ./index.js > dist.js && git add dist.js",
     "precommit": "yarn run flow && yarn run eslint && yarn run babel",
     "postinstall": "yarn run update-flow-typed"
   }

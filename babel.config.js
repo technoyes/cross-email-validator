@@ -1,7 +1,7 @@
 module.exports = (api) => {
   api.cache(() => process.env.NODE_ENV);
 
-  const presets = [ "@babel/flow", "minify" ];
+  const presets = [ "minify" ];
   const plugins = [ "lodash" ];
 
   return {

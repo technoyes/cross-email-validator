@@ -7,6 +7,7 @@
         [ "eslint:recommended"
         , "plugin:lodash/recommended"
         ],
+    "parser": "babel-eslint",
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
@@ -18,7 +19,8 @@
         "lodash",
         "dependencies",
         "node", "promise",
-        "prettier"
+        "prettier",
+        "babel"
     ],
     "rules": {
         "indent": [ "error", 2 ],
@@ -139,6 +141,12 @@
         "promise/no-native": ["error"],
         "promise/no-return-in-finally": ["error"],
         "promise/valid-params": ["error"],
-        "require-yield": ["error"]
+        "require-yield": ["error"],
+        "babel/new-cap": 1,
+        "babel/no-invalid-this": 1,
+        "babel/object-curly-spacing": 1,
+        "babel/quotes": 1,
+        "babel/semi": 1,
+        "babel/no-unused-expressions": 1
     }
 }

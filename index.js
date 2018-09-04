@@ -1,11 +1,16 @@
+//@flow
 /*global fetch*/
 
-const { isNil, isEmpty, isString, merge } = require("lodash");
+const { isUndefined, isNil, isEmpty, isString, merge } = require("lodash");
 const looksLikeEmail = require("validator/lib/isEmail");
 const Promise = require("bluebird");
 const URI = require("urijs");
-require("cross-fetch/polyfill"); // Lets us test the file in Node
 const tlds = require("tlds");
+
+// Ensure we have 'fetch' (eg: in Node)
+if(isUndefined(global.fetch)) {
+  require("cross-fetch/polyfill"); // Lets us test the file in Node
+}
 
 const atSymbol = "@";
 const getDnsOverHttpUri = (
@@ -29,20 +34,19 @@ const doFetch = (uri, customOptions={}) => Promise.try(() => fetch(uri, merge({
 }).call("json");
 
 
-module.exports = (addr) => {
-  const onError = (msg) => (error) => {
-    console.warn(`Error while ${msg}; returning true by default: ${error.message || error}`, { addr, error }, error);
+module.exports = (addr:string) => {
+  const onError = (msg:string) => (error:Error) => {
+    console.warn(`Error while ${msg}; returning true by default: ${error.message}`, { addr, error }, error);
     return true;
   };
-  const logResults = (msg) => (result) => console.debug(
-    `Results from ${msg} => ${result}`,
-    { addr, result }
+  const logResults = (msg:string) => (result:mixed) => console.debug(
+    `Results of ${msg}`, { addr, result }
   );
 
   const timeLimitMs = 1000;
 
-  const runCheck = (msg, func) => Promise.try(() => func(addr)).timeout(timeLimitMs).tap(
-    (result) => console.debug(`Successfully completed ${msg}. Result: ${result}`)
+  const runCheck = (msg:string, func:string=>Promise<boolean>|boolean) => Promise.try(() => func(addr)).timeout(timeLimitMs).tap(
+    (result) => console.debug(`Successfully completed ${msg}.`, result)
   ).catch(onError(msg)).tap(logResults(msg));
 
   const validatingName = "validating email address";
@@ -78,7 +82,7 @@ module.exports = (addr) => {
         if(result.Status !== 0) {
           throw new Error(`Bad status code from DNS query: ${result.Status}`);
         }
-      }).get("Answer").then((answer) => {
+      }).then(it => it.Answer).then((answer) => {
         if(isNil(answer)) {
           throw new Error(`No answer returned: ${answer}`);
         }
@@ -92,7 +96,7 @@ module.exports = (addr) => {
     const burnerName = "performing burner e-mail check";
     const burnerCheck = runCheck(
       burnerName,
-      () => doFetch(getBurnerCheckUri(domainName)).get("disposable").then((result) => {
+      () => doFetch(getBurnerCheckUri(domainName)).then(it => Boolean(it.disposable)).then((result) => {
         if(isNil(result)) {
           throw new Error(`No result returned: ${result}`);
         }

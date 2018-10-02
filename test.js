@@ -1,4 +1,4 @@
-#!node
+#!./node_modules/mocha/bin/_mocha 
 
 const { expect, request } = require('chai');
 const validateEmail = require("./index.js");

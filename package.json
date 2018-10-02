@@ -42,7 +42,7 @@
     "eslint": "eslint --cache --fix ./index.js 2>&1 1>/dev/null || eslint --cache --color --report-unused-disable-directives ./index.js",
     "babel": "babel ./index.js",
     "parcel": "parcel build --out-dir ./dist/browser/ --global CrossEmail ./index.js && git add ./dist",
-    "precommit": "yarn run test && yarn run eslint && yarn run parcel",
+    "precommit": "yarn run eslint && yarn run test && yarn run parcel",
     "test": "istanbul cover ./node_modules/mocha/bin/_mocha -- --harmony --use_strict --throw-deprecation --check-leaks --async-only ./test.js"
   }
 }

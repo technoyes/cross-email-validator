@@ -1,6 +1,6 @@
 /*global fetch*/
 
-const {isUndefined, isNil, isEmpty, isString, merge} = require("lodash");
+const {isUndefined, isNil, isEmpty, isString, assign} = require("lodash");
 const looksLikeEmail = require("validator/lib/isEmail");
 const Promise = require("bluebird");
 const URI = require("urijs");
@@ -21,7 +21,7 @@ const getDnsOverHttpUri = (
 }));
 const getBurnerCheckUri = (domainName) => new URI("https://open.kickbox.com/v1/disposable/beewell.health").filename(domainName).toString();
 
-const doFetch = (uri, customOptions={}) => Promise.try(() => fetch(uri, merge({
+const doFetch = (uri, customOptions={}) => Promise.try(() => fetch(uri, assign({
   credentials: "omit",
   mode: "cors",
   method: "GET",

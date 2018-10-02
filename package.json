@@ -23,19 +23,26 @@
     "babel-eslint": "^9.0.0",
     "babel-plugin-lodash": "^3.3.4",
     "babel-preset-minify": "^0.4.3",
+    "chai": "^4.2.0",
+    "codecov": "^3.1.0",
     "eslint": "^5.1.0",
     "eslint-plugin-babel": "^5.1.0",
     "eslint-plugin-dependencies": "^2.4.0",
     "eslint-plugin-lodash": "^2.7.0",
     "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-prettier": "^3.0.0",
     "eslint-plugin-promise": "^3.8.0",
     "husky": "^0.14.3",
-    "parcel": "^1.9.7"
+    "istanbul": "^0.4.5",
+    "mocha": "^5.2.0",
+    "parcel": "^1.9.7",
+    "prettier": "^1.14.3"
   },
   "scripts": {
     "eslint": "eslint --cache --fix ./index.js 2>&1 1>/dev/null || eslint --cache --color --report-unused-disable-directives ./index.js",
     "babel": "babel ./index.js",
     "parcel": "parcel build --out-dir ./dist/browser/ --global CrossEmail ./index.js && git add ./dist",
-    "precommit": "yarn run eslint && yarn run parcel"
+    "precommit": "yarn run test && yarn run eslint && yarn run parcel",
+    "test": "istanbul cover ./node_modules/mocha/bin/_mocha -- --harmony --use_strict --throw-deprecation --check-leaks --async-only ./test.js"
   }
 }

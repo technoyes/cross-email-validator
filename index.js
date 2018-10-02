@@ -42,7 +42,7 @@ module.exports = (addr) => {
     `Results of ${msg}`, {addr, result}
   );
 
-  const timeLimitMs = 1000;
+  const timeLimitMs = 5000;
 
   const runCheck = (msg, func) => Promise.try(() => func(addr)).timeout(timeLimitMs).tap(
     (result) => console.debug(`Successfully completed ${msg}.`, result)
@@ -81,15 +81,11 @@ module.exports = (addr) => {
         if(result.Status !== 0) {
           throw new Error(`Bad status code from DNS query: ${result.Status}`);
         }
-      }).then((it) => it.Answer).then((answer) => {
-        if(isNil(answer)) {
-          throw new Error(`No answer returned: ${answer}`);
-        }
-        if(isEmpty(answer)) {
-          return false;
-        }
-        return true;
-      })
+      }).then(
+        (it) => it.Answer
+      ).then(
+        (answer) => !(isNil(answer) || isEmpty(answer))
+      )
     );
 
     const burnerName = "performing burner e-mail check";

@@ -1,29 +1,26 @@
 {
     "env": {
-        "es6": true,
         "node": true
     },
     "extends":
         [ "eslint:recommended"
         , "plugin:lodash/recommended"
         ],
-    "parser": "babel-eslint",
     "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "ecmaVersion": 2018,
         "sourceType": "module"
     },
     "plugins": [
         "lodash",
         "dependencies",
         "node", "promise",
-        "prettier",
-        "babel"
+        "prettier"
     ],
     "rules": {
-        "indent": [ "error", 2 ],
+        "no-extra-semi": [ "off" ],
+        "lodash/prefer-get": [ "warn" ],
+        "no-unused-vars": [ "warn" ],
+        "no-case-declarations": [ "warn" ],
+        "indent": [ "warn", 2 ],
         "linebreak-style": [ "error", "unix" ],
         "semi": [ "warn", "always" ],
         "no-await-in-loop": [ "error" ],
@@ -35,7 +32,7 @@
         "consistent-return": [ "error" ],
         "curly": [ "error", "multi-line" ],
         "default-case": [ "error" ],
-        "dot-location": [ "warn", "object" ],
+        "dot-location": [ "warn", "property" ],
         "dot-notation": [ "warn", {"allowKeywords": true} ],
         "eqeqeq": [ "error" ],
         "no-alert": [ "error" ],
@@ -70,7 +67,7 @@
         "require-await": [ "error" ],
         "strict": [ "error", "global" ],
         "no-label-var": [ "error" ],
-        "no-shadow": [ "error" ],
+        "no-shadow": [ "warn" ],
         "no-shadow-restricted-names": [ "error" ],
         "no-undef-init": [ "error" ],
         "no-use-before-define": [ "warn" ],
@@ -94,7 +91,7 @@
         "array-bracket-newline": [ "warn", "consistent" ],
         "camelcase": [ "warn", { "ignoreDestructuring": true } ],
         "comma-dangle": [
-            "error",
+            "warn",
             { "arrays": "always-multiline",
               "objects": "always-multiline",
               "imports": "always-multiline",
@@ -116,7 +113,7 @@
         "no-useless-computed-key": [ "warn" ],
         "no-useless-rename": [ "warn" ],
         "no-await-in-loop": [ "error" ],
-        "no-console": [ "error", { "allow": ["debug","warn","error"] } ],
+        "no-console": [ "warn", { "allow": ["debug","warn","error"] } ],
         "lodash/chaining": [ "off" ],
         "lodash/chain-style": [ "off" ],
         "lodash/import-scope": [ "off" ],
@@ -130,7 +127,7 @@
         "dependencies/require-json-ext": [ "warn" ],
         "node/no-extraneous-import": [ "off" ],
         "node/no-missing-import": [ "error" ],
-        "node/exports-style": [ "warn", "module.exports" ],
+        "node/exports-style": [ "warn", "exports" ],
         "node/prefer-global/buffer": ["warn", "never"],
         "node/prefer-global/console": ["warn", "always"],
         "node/prefer-global/process": ["warn", "never"],
@@ -140,13 +137,7 @@
         "promise/param-names": ["warn"],
         "promise/no-native": ["error"],
         "promise/no-return-in-finally": ["error"],
-        "promise/valid-params": ["error"],
-        "require-yield": ["error"],
-        "babel/new-cap": 1,
-        "babel/no-invalid-this": 1,
-        "babel/object-curly-spacing": 1,
-        "babel/quotes": 1,
-        "babel/semi": 1,
-        "babel/no-unused-expressions": 1
+        "promise/valid-params": ["warn"],
+        "require-yield": ["error"]
     }
 }

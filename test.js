@@ -27,6 +27,18 @@ describe('Live Integration Tests', () => {
     () => [
       'root',
       'smokejumperit@.com',
+      null,
+      undefined,
+      1,
+      '@gmail.com',
+      'smokejumperit@',
+      'smokejumperit@gmail.',
+      ' @ ',
+      ' @ .com',
+      ' @gmail.com',
+      'smokejumperit@totally.invalid.tld.asdfjadfkajsflksjfdakldjsfaslksj',
+      'smokejumperit@slippery.email',
+      'smokejumperit@maildrop.cc',
     ].forEach(
       (email) => it(
         "should return INvalid for " + email,

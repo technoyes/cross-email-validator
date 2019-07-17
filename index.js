@@ -1,12 +1,26 @@
 /*global fetch*/
 
-const {isUndefined, isNil, isEmpty, isString, assign} = require("lodash");
+const timeLimitMs = 5000;
+
+const isNode=require("detect-is-node")();
+
+const {
+  assign,
+  castArray,
+  isEmpty,
+  isNil,
+  isString,
+  isUndefined,
+  once,
+  stubFalse,
+  stubTrue,
+} = require("lodash");
 const looksLikeEmail = require("validator/lib/isEmail");
 const Promise = require("bluebird");
 const URI = require("urijs");
 const tlds = require("tlds");
 
-// Ensure we have 'fetch' (eg: in Node)
+// Ensure we have 'fetch' (eg: in Node, ancient browsers)
 if(isUndefined(global.fetch)) {
   require("cross-fetch/polyfill"); // Lets us test the file in Node
 }
@@ -19,7 +33,7 @@ const getDnsOverHttpUri = (
   "do": true,
   "cd": false,
 }));
-const getBurnerCheckUri = (domainName) => new URI("https://open.kickbox.com/v1/disposable/beewell.health").filename(domainName).toString();
+const getBurnerCheckUri = (domainName) => new URI("https://open.kickbox.com/v1/disposable/k4connect.com").filename(domainName).toString();
 
 const doFetch = (uri, customOptions={}) => Promise.try(() => fetch(uri, assign({
   credentials: "omit",
@@ -42,11 +56,12 @@ module.exports = (addr) => {
     `Results of ${msg}`, {addr, result}
   );
 
-  const timeLimitMs = 5000;
-
   const runCheck = (msg, func) => Promise.try(() => func(addr)).timeout(timeLimitMs).tap(
     (result) => console.debug(`Successfully completed ${msg}.`, result)
-  ).catch(onError(msg)).tap(logResults(msg));
+  ).catch(Promise.TimeoutError, () => {
+    console.debug(`Timeout when running ${msg}`);
+    return true;
+  }).catch(onError(msg)).tap(logResults(msg));
 
   const validatingName = "validating email address";
   return runCheck(validatingName, () => {
@@ -83,15 +98,47 @@ module.exports = (addr) => {
         }
       }).then(
         (it) => it.Answer
-      ).then(
-        (answer) => !(isNil(answer) || isEmpty(answer))
-      )
+      ).then((answer) => {
+        answer = castArray(answer);
+        const emptyAnswer = isEmpty(answer);
+        if(!isNode || emptyAnswer) return !emptyAnswer;
+        const SMTPConnection = require("nodemailer/lib/smtp-connection");
+        return Promise.map(
+          answer,
+          (anAnswer) => {
+            const { data } = anAnswer;
+            const host = (/([\d\w.-]+)\.\s*$/i.exec(data))[1];
+            if(!host) throw new Error(`No SMTP server name found in MX record: ${host}`);
+            const connection = new SMTPConnection({
+              host,
+              opportunisticTLS: true,
+            });
+            return new Promise( (resolve, reject) => {
+              try {
+                resolve = once(resolve);
+                reject = once(reject);
+                connection.connect( (err) => {
+                  if(err) reject(err);
+                  resolve(true);
+                });
+                connection.on('error', (err) => {
+                  reject(err);
+                });
+              } catch(e) {
+                reject(e);
+              }
+            }).finally( () => {
+              try { connection.quit(); } catch(e) { /* ignored */ }
+            });
+          }
+        ).any().catch(stubFalse);
+      })
     );
 
     const burnerName = "performing burner e-mail check";
     const burnerCheck = runCheck(
       burnerName,
-      () => doFetch(getBurnerCheckUri(domainName)).then((it) => Boolean(it.disposable)).then((result) => {
+      () => doFetch(getBurnerCheckUri(domainName)).get('disposable').then((result) => {
         if(isNil(result)) {
           throw new Error(`No result returned: ${result}`);
         }
@@ -99,7 +146,12 @@ module.exports = (addr) => {
       })
     );
 
+
     const compilingName = "compiling results";
-    return runCheck(compilingName, () => Promise.filter([mxRecordCheck,burnerCheck], (it) => !it).then((failures) => isNil(failures) || isEmpty(failures)));
+    return runCheck(compilingName, () => Promise.filter([
+      mxRecordCheck,
+      burnerCheck,
+    ], (it) => !it).then((failures) => isNil(failures) || isEmpty(failures)));
   });
 };
+

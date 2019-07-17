@@ -34,23 +34,18 @@ await validateEmail("developer+rnev@health"); // returns false
 *These are performed concurrenctly.*
 
 * Calls out to [the `1.1.1.1` DNS over HTTPS server](https://developers.cloudflare.com/1.1.1.1/dns-over-https/) to ensure that there exists at least one MX record for the domain.
-* At the same time, calls out to the [Kickbox "disposable email" API](https://open.kickbox.com/v1/disposable/beewell.health) to validate that the e-mail domain is not a disposable email domain.
-* It'd be nice to do an SMTP check, but it's unclear how to do that from within React Native without unlinking.
+* If you are in Node (according to [`detect-is-node`](https://www.npmjs.com/package/detect-is-node)), we also reach out to the SMTP servers returned by the MX check to ensure that at least one of them is running.
+* At the same time, calls out to the [Kickbox "disposable email" API](https://open.kickbox.com/v1/disposable/k4connect.com) to validate that the e-mail domain is not a disposable email domain.
 
-Note that any network check that errors out will be counted as a pass. So if there is no internet, the internet connection is slow, or the server is down, then it is equivalent to the network check returning valid.
+Note that any network check that errors out or times out will be counted as a pass. So if there is no internet, the internet connection is slow, or the server is down, then it is equivalent to the network check returning valid.
 
 # Browser-Friendly Version of the File
 
-If you're looking for a [Flow](https://flow.org/en/docs/)-free, minified version of the script (say, to include in a webpage), then look
+If you're looking for a minified version of the script (say, to include in a webpage), then look
 no further than `./dist/browser/index.js`. It is produced using [Parcel](https://parceljs.org/) and automatically updated before every commit.
-The browser support is specified in `./.browserslist.rc` -- for more information, see [browserslist on GitHub](https://github.com/browserslist/browserslist).
+The browser support is specified in `./.browserslistrc` -- for more information, see [browserslist on GitHub](https://github.com/browserslist/browserslist).
 
 When you load that file, the global variable `CrossEmail` will be provided which links to this module.
-
-# Node-Friendly Version of the File
-
-Currently, the `./index.js` file _is_ Node-friendly, but that may not always remain the case. We have the folders `./dist/browser/` and `./dist/node/` for the distinct builds. For the moment, `./dist/node/index.js` currently just symlinks back to `./index.js`, but don't depend
-on that.
 
 # License
 
